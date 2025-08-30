@@ -218,3 +218,8 @@ We are using RemixID for deploying the contract and generation of the ABI in the
   ]
 );
 ```
+
+
+✅ Contract deployed to: 0x4aeA1B5a647715B741Ef3c7F06E6C8477fFf19E8
+
+Airdrop contract: 0xA5e1DFc3177067E2680196D1B6f815594cb38071

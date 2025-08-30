@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzepplin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract CustonToken is ERC20 {
+contract CustomToken is ERC20 {
     constructor(string memory name, string memory symbol) ERC20(name, symbol) {
         _mint(msg.sender, 10000000 * 10 ** 18); 
     }
@@ -29,7 +29,7 @@ contract CustomDex {
     }
 
     uint256 public _historyIndex;
-    mapping(uint256 => history) private historys;
+    mapping(uint256 => History) private historys;
 
     constructor() {
         for (uint i=0; i<tokens.length; i++){
@@ -75,7 +75,7 @@ contract CustomDex {
     function swapEthToToken(string memory tokenName) public payable returns(uint256) {
         uint256 inputValue = msg.value;
         uint256 outputValue = (inputValue / ethValue) * 10 ** 18; // converted to 18 decimal places
-        require(tokenInstanceMap[tokenName].transfer(msg.sender, outputvalue));
+        require(tokenInstanceMap[tokenName].transfer(msg.sender, outputValue));
         
         string memory etherToken = "Ether";
         _transactionHistory(tokenName, etherToken, inputValue, outputValue);
@@ -107,7 +107,7 @@ contract CustomDex {
     }
 
     function getAllHistory() public view returns(History[] memory) {
-        uint256 itemCount = historysIndex;
+        uint256 itemCount = _historyIndex;
         uint256 currentIndex = 0;
 
         History[] memory items = new History[](itemCount);
