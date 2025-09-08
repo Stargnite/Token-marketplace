@@ -7,7 +7,7 @@ import SingleCard from "./SingleCard"
 import SwapComponent from "./SwapComponent"
 import Table from "./Table"
 import TokenBalance from "./TokenBalance"
-import TransactionStatus from ". TransactionStatus"
+import TransactionStatus from "./TransactionStatus"
 
 // SVG ICONS
 import Menu from "./SVG/Menu"
