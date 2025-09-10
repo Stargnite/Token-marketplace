@@ -6,5 +6,6 @@ export const COIN_4 = "stETH";
 export const COIN_5 = "TRON";
 export const COIN_6 = "Matic Token";
 export const COIN_7 = "SHIBA INU";
+export const COIN_8 = "MON";
 export const Uniswap = "Uniswap";
-export const DEFALUT_VALUE = "Select a token";
+export const DEFAULT_VALUE = "Select a token";

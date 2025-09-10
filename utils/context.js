@@ -40,7 +40,7 @@ export async function hasValidAllowance(owner, tokenName, amount) {
 
 export async function swapTokenToEth(tokenName, amount) {
   try {
-    const contractObj = await Contract();
+    const contractObj = await contract();
     const data = await contractObj.swapTokenToEth(tokenName, toWei(amount));
 
     const result = await data.wait();
@@ -67,7 +67,7 @@ export async function swapTokenToToken(srcToken, destToken, amount) {
 
 export async function getTokenBalance(tokenName, address) {
   const contractObj = await contract();
-  const balance = await contractObj.getTokenBalance(tokenName, address);
+  const balance = await contractObj.getBalance(tokenName, address);
   return balance;
 }
 
