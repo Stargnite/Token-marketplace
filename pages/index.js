@@ -5,8 +5,8 @@ const index = () => {
     <div className="bg-[#1A1A1A]">
       <Header />
       <HeroSection />
-      {/* <Card />
-      <Footer /> */}
+      <Card />
+      <Footer />
     </div>
   );
 };

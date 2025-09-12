@@ -5,7 +5,7 @@ const HeroSection = () => {
     <section className="bg-[#1A1A1A] text-gray-100">
       <div
         className="container flex flex-col justify-center p-6 mx-auto sm:py-12
-                   lg:py-24 lg:flex-grow lg:justify-between"
+                   lg:py-24 lg:flex-row lg:justify-between"
       >
         <div
           className="flex flex-col justify-center p-6 text-center rounded-sm
@@ -32,16 +32,19 @@ const HeroSection = () => {
             >
               Get Started
             </a>
-            <a 
-            rel="noopener noreferrer"
-            href="#"
-            className="px-8 py-3 text-lg font-semibold border rounded border-gray-100">
+            <a
+              rel="noopener noreferrer"
+              href="#"
+              className="px-8 py-3 text-lg font-semibold border rounded border-gray-100"
+            >
               Swap ERC20
             </a>
           </div>
         </div>
-        <div className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80
-        lg:h-96 xl:h-112 2xl:h-128">
+        <div
+          className="flex items-center justify-center p-6 mt-8 lg:mt-0 h-72 sm:h-80
+        lg:h-96 xl:h-112 2xl:h-128"
+        >
           <SwapComponent />
         </div>
       </div>

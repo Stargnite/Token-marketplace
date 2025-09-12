@@ -4,6 +4,7 @@ import {
   increaseAllowance,
   swapEthToToken,
   swapTokenToEth,
+  swapTokenToToken,
 } from "../utils/context";
 
 import { CogIcon, ArrowSmDownIcon } from "@heroicons/react/outline";
@@ -93,7 +94,154 @@ const SwapComponent = () => {
     if (isReversed.current) isReversed.current = false;
   }, [outputValue, srcToken]);
 
-  return <div></div>;
+  return (
+    <div
+      className="border-[1px] rounded-l border-[#7765F3] bg-[#7765F3] w-[100%]
+  p-4 px-6 rounded-xl"
+    >
+      <div className="flex items-center justify-between py-4 px-1">
+        <p>Swap</p>
+        <CogIcon className="h-6" />
+      </div>
+      <div
+        className="relative bg-[#212429] p-4 py-6 rounded-xl md-2 border-[2px] 
+      border-transparent hover:border-zinc-600"
+      >
+        {srcTokenComp}
+
+        <ArrowSmDownIcon
+          className="absolute left-1/2 -translate-x-1/2 -bottom-6 h-10 p-1 bg-[#212429]
+        border-4 border-zinc-900 text-zinc-300 rounded-xl cursor-pointer hover:scale-110"
+          onClick={handleReverseExchange}
+        />
+      </div>
+      <div className="bg-[#212429] p-4 py-6 rounded-xl mt-2 border-[2px] border-transparent hover:border-zinc-600">
+        {destTokenComp}
+      </div>
+
+      <button
+        className={getSwapBtnClassname()}
+        onClick={() => {
+          if (swapBtnText === INCREASE_ALLOWANCE) handleIncreaseAllowance();
+          else if (swapBtnText === SWAP) handleSwap();
+        }}
+      >
+        {swapBtnText}
+      </button>
+
+      {txPending && <TransactionStatus />}
+
+      <Toaster />
+    </div>
+  );
+
+  async function handleSwap() {
+    if (srcToken === ETH && destToken !== ETH) {
+      performSwap();
+    } else {
+      // To check whether there is allowance when they swap deals with tokeToEth/tokenToToken
+      setTxPending(true);
+      const result = await hasValidAllowance(address, srcToken, inputValue);
+      setTxPending(false);
+
+      if (result) performASwap();
+      else handleInsufficientAllowance();
+    }
+  }
+
+  async function handleIncreaseAllowance() {
+    setTxPending(true);
+    await increaseAllowance(srcToken, inputValue);
+    setTxPending(false);
+
+    setSwapBtnText(SWAP);
+  }
+
+  function handleReverseExchange(e) {
+    isReversed.current = true;
+
+    setInputValue(outputValue);
+    setOutputValue(inputValue);
+
+    setSrcToken(destToken);
+    setDestToken(srcToken);
+  }
+
+  function getSwapBtnClassname() {
+    let className = "p-4 w-full my-2 rounded-xl";
+    className +=
+      swapBtnText === ENTER_AMOUNT || swapBtnText === CONNECT_WALLET
+        ? "tex-zinc-400 bg-zinc-800 pointer-events-none"
+        : "bg-blue-700";
+    className += swapBtnText === INCREASE_ALLOWANCE ? "bg-yellow-600" : "";
+    return className;
+  }
+
+  function populateOutputValue() {
+    if (
+      destToken === DEFAULT_VALUE ||
+      srcToken === DEFAULT_VALUE ||
+      !inputValue
+    )
+      return;
+
+    try {
+      if (srcToken !== ETH && destToken !== ETH) setOutputValue(inputValue);
+      else if (srcToken === ETH && destToken !== ETH) {
+        const outValue = toEth(toWei(inputValue), 14);
+        setOutputValue(outValue);
+      }
+    } catch (err) {
+      setOutputValue("0");
+    }
+  }
+
+  function populateInputValue() {
+    if (
+      destToken === DEFAULT_VALUE ||
+      srcToken === DEFAULT_VALUE ||
+      !outputValue
+    )
+      return;
+
+    try {
+      if (srcToken !== ETH && destToken !== ETH) setInputValue(outputValue);
+      else if (srcToken === ETH && destToken !== ETH) {
+        const outValue = toEth(toWei(outputValue, 14));
+        setInputValue(outValue);
+      } else if (srcToken !== ETH && destToken === ETH) {
+        const outValue = toEth(toWei(outputValue), 14);
+        setInputValue(outValue);
+      }
+    } catch (error) {
+      setInputValue("0");
+    }
+  }
+
+  async function performSwap() {
+    setTxPending(true);
+
+    let receipt;
+
+    if (srcToken === ETH && destToken !== ETH)
+      receipt = await swapEthToToken(destToken, inputValue);
+    else if (srcToken !== ETH && destToken === ETH)
+      receipt = await swapTokenToEth(srcToken, inputValue);
+    else receipt = await swapTokenToToken(srcToken, destToken, inputValue);
+
+    setTxPending(false);
+
+    if (receipt && !receipt.hasOwnProperty("transactionHash"))
+      notifyError(receipt);
+    else notifySuccess();
+  }
+
+  function handleInsufficientAllowance() {
+    notifyError(
+      "Insuffucuent allowance. Click 'Increase Allowance' to increase it"
+    );
+    setSwapBtnText(INCREASE_ALLOWANCE);
+  }
 };
 
 export default SwapComponent;
