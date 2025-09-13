@@ -25,24 +25,66 @@ const SingleCard = ({ index, name, walletAddress }) => {
   const notifyError = (msg) => toast.error(msg, { duration: 6000 });
   const notifySuccess = () => toast.success("Transaction completed.");
 
-  useEffect(() => {
-    if (name && walletAddress) {
-      fetchTokenBalance();
-      fetchTokenBalance();
-    } else setBalance("-");
-  }, [name, walletAddress]);
+useEffect(() => {
+  if (name && walletAddress) {
+    fetchTokenBalance();
+  } else {
+    setBalance("-");
+  }
+}, [name, walletAddress]);
+
 
   async function fetchTokenBalance() {
+  try {
     const bal = await getTokenBalance(name, walletAddress);
+    console.log("Raw balance response >>>", bal);
 
-    const fBal = ethers.utils.formatUnits(bal.toString(), 18);
+    // Ensure bal is a BigNumber
+    if (!bal || typeof bal.toString !== "function") {
+      console.error("Invalid balance response (likely revert):", bal);
+      setBalance("0");
+      return;
+    }
+
+    const fBal = ethers.utils.formatUnits(bal, 18); // no need to bal.toString()
     setBalance(fBal.toString());
+  } catch (err) {
+    console.error("fetchTokenBalance error", err);
+    setBalance("0");
   }
+}
 
-  async function fetchTokenAddress() {
-    const address = await getTokenAddress(name);
-    setTokenAddress(address);
-  }
+  
+//   async function fetchTokenBalance() {
+//   try {
+//     const bal = await getTokenBalance(name, walletAddress);
+//     console.log("Raw balance response >>>", bal);
+
+//     if (!bal || bal.toString === undefined) {
+//       console.error("Invalid balance response", bal);
+//       setBalance("0");
+//       return;
+//     }
+
+//     const fBal = ethers.utils.formatUnits(bal.toString(), 18);
+//     setBalance(fBal.toString());
+//   } catch (err) {
+//     console.error("fetchTokenBalance error", err);
+//     setBalance("0");
+//   }
+// }
+  
+  // async function fetchTokenBalance() {
+  //   const bal = await getTokenBalance(name, walletAddress);
+
+  //   const fBal = ethers.utils.formatUnits(bal.toString(), 18);
+  //   setBalance(fBal.toString());
+  // }
+
+  // async function fetchTokenAddress() {
+  //   const address = await getTokenAddress(name);
+  //   setTokenAddress(address);
+  // }
 
   return (
     <article className="felx flex-col bg-[#212429]">

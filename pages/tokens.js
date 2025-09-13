@@ -8,7 +8,7 @@ const tokens = () => {
   const loadData = async () => {
     const data = await getAllHistory();
 
-    setHistory(data.reverse());
+    setHistory(data);
   };
   useEffect(() => {
     loadData();

@@ -25,7 +25,7 @@ const Table = ({ history }) => {
             </tr>
           </thead>
           <tbody>
-            {history.map((history, i) => (
+            {Array.isArray(history) && history.map((history, i) => (
               <tr
                 key={i + 1}
                 className="border-b border-opacity-20 border-gray-700 bg-[#27272A]"

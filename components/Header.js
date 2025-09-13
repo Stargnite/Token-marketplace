@@ -28,7 +28,7 @@ const Header = () => {
 
   return (
     <header className="p-4 text-gray-100">
-      <div className="container flex justify-between h-16 auto">
+      <div className="container flex justify-between h-16 w-auto">
         <div className="flex">
           <a
             rel="noopener noreferrer"
@@ -68,7 +68,7 @@ const Header = () => {
             </li>
             <li className="flex">
               <a
-                rel="noopenr noreferrer"
+                rel="noopener noreferrer"
                 href="#"
                 className="flex items-center px-4 -mb-1 ark:border-transparent"
               >
@@ -80,7 +80,7 @@ const Header = () => {
         <div className="items-center flex-shrink-0 hidden lg:flex">
           <TokenBalance name={"MON"} walletAddress={address} />
           {/* <TokenBalance name={"SHIBA INU"} wlletAddress={address} /> */}
-          <ConnectButton showBalance={true} />
+          <ConnectButton showBalance={false} />
         </div>
         <button className="p-4 lg:hidden">
           {/* <Menu /> */}
